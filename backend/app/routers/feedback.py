@@ -20,35 +20,50 @@ def get_db():
         db.close()
 
 
-async def notify_telegram(message: str, rating: int, author: str):
-    """Отправка уведомления в Telegram"""
+async def notify_telegram(message: str, rating: int, author: str, category: str, fb_id: int):
+    """Отправка уведомления в Telegram с кнопкой удаления"""
     if not BOT_TOKEN or not ADMIN_CHAT_ID:
         return
-    
-    text = f"☕ Новый отзыв!\n\n"
-    text += f"👤 Автор: {author}\n"
+
+    cat_emoji = {"coffee": "☕", "service": "🤝", "atmosphere": "🏠", "other": "📝"}.get(category, "📝")
+    stars = "⭐" * rating if rating else ""
+
+    text = f"☕ *Новый отзыв!*\n\n"
+    text += f"{cat_emoji} *Автор:* {author}\n"
     if rating:
-        text += f"⭐ Оценка: {rating}/5\n"
-    text += f"💬 Сообщение: {message}"
-    
+        text += f"⭐ *Оценка:* {rating}/5\n"
+    text += f"💬 *Сообщение:* _{message}_"
+
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
+    keyboard = {"inline_keyboard": [[{"text": "❌ Удалить", "callback_data": f"delete_{fb_id}"}]]}
     async with httpx.AsyncClient() as client:
         try:
-            await client.post(url, json={"chat_id": ADMIN_CHAT_ID, "text": text})
+            await client.post(url, json={
+                "chat_id": ADMIN_CHAT_ID,
+                "text": text,
+                "parse_mode": "Markdown",
+                "reply_markup": keyboard,
+            })
         except Exception:
-            pass  # Не прерываем создание отзыва при ошибке уведомления
+            pass
 
 
 @router.post("", response_model=schemas.FeedbackResponse)
 async def create_feedback(feedback: schemas.FeedbackCreate, db: Session = Depends(get_db)):
-    # Отправка уведомления в Telegram
-    await notify_telegram(feedback.message, feedback.rating or 0, feedback.author or "Аноним")
-    
     # Сохранение в БД
     db_feedback = models.Feedback(**feedback.model_dump(exclude_unset=True))
     db.add(db_feedback)
     db.commit()
     db.refresh(db_feedback)
+
+    # Отправка уведомления в Telegram (после получения ID)
+    await notify_telegram(
+        feedback.message,
+        feedback.rating or 0,
+        feedback.author or "Аноним",
+        feedback.category or "other",
+        db_feedback.id,
+    )
     return db_feedback
 
 

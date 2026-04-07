@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func as sa_func, extract
 from datetime import datetime, date
+from typing import List
 from app import models, schemas
 from app.database import SessionLocal
 
@@ -25,3 +26,19 @@ def get_stats(db: Session = Depends(get_db)):
     ).count()
 
     return schemas.FeedbackStats(total=total, avg_rating=round(avg_rating, 2), today=today)
+
+
+@router.get("/feedback/category/{category}", response_model=List[schemas.FeedbackResponse])
+def get_feedbacks_by_category(category: str, db: Session = Depends(get_db)):
+    """Получить отзывы по категории"""
+    return db.query(models.Feedback).filter(
+        models.Feedback.category == category
+    ).order_by(models.Feedback.created_at.desc()).all()
+
+
+@router.get("/feedback/rating/{rating}", response_model=List[schemas.FeedbackResponse])
+def get_feedbacks_by_rating(rating: int, db: Session = Depends(get_db)):
+    """Получить отзывы по рейтингу"""
+    return db.query(models.Feedback).filter(
+        models.Feedback.rating == rating
+    ).order_by(models.Feedback.created_at.desc()).all()
