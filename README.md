@@ -4,7 +4,7 @@
 
 ## Demo
 
-**Live product:** Runs locally at `http://localhost` after deployment.
+**Live product:** [Deploy on Render](#deployment) or run locally at `http://localhost`.
 
 ### Feedback Form
 ![Feedback Form](form-screenshot.png)
@@ -46,16 +46,33 @@
 **For visitors:** Open the web form, fill in rating, category, and message, then submit.
 
 **For owners:**
-- View all feedback at `/admin.html`
+- View all feedback at `/admin`
 - Receive Telegram notifications instantly with delete button
 - Use inline keyboard menu: Statistics, Last Reviews, Filters by category/rating
 
 ## Deployment
 
+### Option A: Render.com (Recommended — Public URL)
+
+**Free hosting with automatic HTTPS:**
+
+1. Fork this repository on GitHub
+2. Go to [render.com](https://render.com) and sign up
+3. Click **New → Blueprint Instance**
+4. Select your forked repository
+5. Render will read `render.yaml` and create all services automatically
+6. Add environment variables:
+   - `BOT_TOKEN` — from [@BotFather](https://t.me/botfather)
+   - `ADMIN_CHAT_ID` — from [@userinfobot](https://t.me/userinfobot)
+7. Click **Apply** and wait for deployment (~2 minutes)
+8. Your app will be live at `https://coffee-feedback-xxxx.onrender.com`
+
+### Option B: Local (Docker)
+
 **Requirements:** Ubuntu 24.04, Docker, Docker Compose
 
-**1. Telegram Bot Setup (Required):**
-- **Get `BOT_TOKEN`:** Message [@BotFather](https://t.me/botfather) in Telegram, run `/newbot`. Copy the token.
+**1. Telegram Bot Setup:**
+- **Get `BOT_TOKEN`:** Message [@BotFather](https://t.me/botfather), run `/newbot`. Copy the token.
 - **Get `ADMIN_CHAT_ID`:** Message [@userinfobot](https://t.me/userinfobot), run `/start`. Copy your ID.
 
 **2. Clone and Configure:**
@@ -73,7 +90,7 @@ docker compose up -d
 
 **4. Access:**
 - **Web App:** `http://localhost`
-- **Admin Panel:** `http://localhost/admin.html`
+- **Admin Panel:** `http://localhost/admin`
 - **API Docs:** `http://localhost:8000/docs`
 
 ## Tech Stack
@@ -84,8 +101,7 @@ docker compose up -d
 | Database | PostgreSQL 18 |
 | Web Client | HTML + CSS + JavaScript |
 | Telegram Bot | python-telegram-bot |
-| Deployment | Docker + Docker Compose |
-| Reverse Proxy | Caddy |
+| Deployment | Docker + Docker Compose / Render |
 
 ## Project Structure
 
@@ -93,22 +109,25 @@ docker compose up -d
 coffee-feedback/
 ├── backend/
 │   ├── app/
-│   │   ├── main.py          # FastAPI application
+│   │   ├── main.py          # FastAPI application + static files
 │   │   ├── models.py        # SQLAlchemy models
 │   │   ├── schemas.py       # Pydantic schemas
 │   │   ├── database.py      # Database connection
 │   │   └── routers/
 │   │       ├── feedback.py  # Feedback CRUD + Telegram notifications
 │   │       └── admin.py     # Stats + filtering endpoints
-│   └── Dockerfile
+│   ├── Dockerfile
+│   └── requirements.txt
 ├── bot/
 │   ├── bot.py               # Telegram bot with inline keyboards
-│   └── Dockerfile
+│   ├── Dockerfile
+│   └── requirements.txt
 ├── web/
 │   ├── index.html           # Feedback form
 │   ├── admin.html           # Admin dashboard
 │   └── style.css, script.js, admin.js
 ├── docker-compose.yml
+├── render.yaml              # Render.com deployment config
 ├── Caddyfile
 └── README.md
 ```
@@ -118,6 +137,8 @@ coffee-feedback/
 ### Public:
 | Method | Path | Description |
 |---|---|---|
+| GET | `/` | Web feedback form |
+| GET | `/admin` | Admin dashboard |
 | POST | `/api/feedback` | Create new feedback |
 
 ### Admin:

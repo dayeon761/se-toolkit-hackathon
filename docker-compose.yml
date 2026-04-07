@@ -15,7 +15,9 @@ services:
     restart: unless-stopped
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
     environment:
       - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/coffee_feedback
       - BOT_TOKEN=${BOT_TOKEN}
@@ -40,7 +42,7 @@ services:
   caddy:
     image: caddy:2-alpine
     ports:
-      - "42002:80"
+      - "80:80"
     volumes:
       - ./web:/srv
       - ./Caddyfile:/etc/caddy/Caddyfile
