@@ -29,6 +29,7 @@
 
 ### Version 2 — Advanced Features
 - **Telegram bot with inline keyboard menu** — no need to type commands
+- **"Back to Main Menu" button** on every screen for easy navigation
 - **Instant notifications** with interactive "Delete" button
 - **Filter by category** — coffee, service, atmosphere, other
 - **Filter by rating** — view all reviews with a specific score
