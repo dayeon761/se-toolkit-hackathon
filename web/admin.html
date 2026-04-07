@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель администратора</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container admin-container">
+        <h1>📊 Панель администратора</h1>
+        
+        <div class="stats-panel" id="statsPanel">
+            <div class="stat-card">
+                <h3>Всего отзывов</h3>
+                <p id="totalFeedbacks">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Средний рейтинг</h3>
+                <p id="avgRating">0.0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Сегодня</h3>
+                <p id="todayFeedbacks">0</p>
+            </div>
+        </div>
+
+        <h2>Все отзывы</h2>
+        <div id="feedbacksList">
+            <p class="loading">Загрузка...</p>
+        </div>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+</html>

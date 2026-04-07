@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Оставить отзыв</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>☕ Оставить отзыв о кофейне</h1>
+        <form id="feedbackForm">
+            <div class="form-group">
+                <label for="author">Ваше имя (необязательно)</label>
+                <input type="text" id="author" placeholder="Аноним">
+            </div>
+            <div class="form-group">
+                <label for="rating">Оценка *</label>
+                <select id="rating" required>
+                    <option value="">Выберите оценку</option>
+                    <option value="5">⭐⭐⭐⭐⭐ 5 - Отлично</option>
+                    <option value="4">⭐⭐⭐⭐ 4 - Хорошо</option>
+                    <option value="3">⭐⭐⭐ 3 - Средне</option>
+                    <option value="2">⭐⭐ 2 - Плохо</option>
+                    <option value="1">⭐ 1 - Ужасно</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select id="category">
+                    <option value="coffee">☕ Кофе</option>
+                    <option value="service">🤝 Обслуживание</option>
+                    <option value="atmosphere">🏠 Атмосфера</option>
+                    <option value="other">📝 Другое</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="message">Ваш отзыв *</label>
+                <textarea id="message" rows="5" placeholder="Расскажите о вашем опыте..." required></textarea>
+            </div>
+            <button type="submit">Отправить отзыв</button>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
