@@ -46,13 +46,26 @@
 
 **Requirements:** Ubuntu 24.04, Docker, Docker Compose
 
-**Steps:**
+**1. Telegram Bot Setup (Required):**
+- **Get `BOT_TOKEN`:** Message [@BotFather](https://t.me/botfather) in Telegram, run `/newbot`. Copy the token.
+- **Get `ADMIN_CHAT_ID`:** Message [@userinfobot](https://t.me/userinfobot), run `/start`. Copy your ID.
+
+**2. Clone and Configure:**
 ```bash
 git clone <your-repo-url>
 cd se-toolkit-hackathon
-cp .env.example .env.docker.secret
-# Edit .env.docker.secret with your BOT_TOKEN and ADMIN_CHAT_ID
-docker compose up --build -d
+cp .env.example .env
+```
+Edit `.env` and paste your `BOT_TOKEN` and `ADMIN_CHAT_ID`.
+
+**3. Start:**
+```bash
+docker compose up -d
+```
+
+**4. Access:**
+- **Web App:** `http://localhost`
+- **Admin Panel:** `http://localhost/admin.html`
 ```
 
 ## License
