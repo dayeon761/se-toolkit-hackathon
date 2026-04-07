@@ -4,7 +4,10 @@
 
 ## Demo
 
-**Live product:** [Deploy on Render](#deployment) or run locally at `http://localhost`.
+**Live product:** Runs locally on your machine. After deployment, open:
+
+🌐 **[http://localhost](http://localhost)** — Feedback form  
+📊 **[http://localhost/admin](http://localhost/admin)** — Admin dashboard
 
 ### Feedback Form
 ![Feedback Form](form-screenshot.png)
@@ -52,30 +55,21 @@
 
 ## Deployment
 
-### Option A: Render.com (Recommended — Public URL)
+**Requirements:** Ubuntu 24.04 (or any OS with Docker), Docker, Docker Compose
 
-**Free hosting with automatic HTTPS:**
+**1. Install Docker** (if not installed):
+```bash
+# Ubuntu 24.04
+sudo apt update && sudo apt install -y docker.io docker-compose-v2
+sudo usermod -aG docker $USER
+# Log out and log back in
+```
 
-1. Fork this repository on GitHub
-2. Go to [render.com](https://render.com) and sign up
-3. Click **New → Blueprint Instance**
-4. Select your forked repository
-5. Render will read `render.yaml` and create all services automatically
-6. Add environment variables:
-   - `BOT_TOKEN` — from [@BotFather](https://t.me/botfather)
-   - `ADMIN_CHAT_ID` — from [@userinfobot](https://t.me/userinfobot)
-7. Click **Apply** and wait for deployment (~2 minutes)
-8. Your app will be live at `https://coffee-feedback-xxxx.onrender.com`
+**2. Telegram Bot Setup:**
+- **Get `BOT_TOKEN`:** Open [@BotFather](https://t.me/botfather) in Telegram, send `/newbot`, follow instructions, copy the token.
+- **Get `ADMIN_CHAT_ID`:** Open [@userinfobot](https://t.me/userinfobot), send `/start`, copy your numeric ID.
 
-### Option B: Local (Docker)
-
-**Requirements:** Ubuntu 24.04, Docker, Docker Compose
-
-**1. Telegram Bot Setup:**
-- **Get `BOT_TOKEN`:** Message [@BotFather](https://t.me/botfather), run `/newbot`. Copy the token.
-- **Get `ADMIN_CHAT_ID`:** Message [@userinfobot](https://t.me/userinfobot), run `/start`. Copy your ID.
-
-**2. Clone and Configure:**
+**3. Clone and Configure:**
 ```bash
 git clone https://github.com/dayeon761/se-toolkit-hackathon.git
 cd se-toolkit-hackathon
@@ -83,15 +77,20 @@ cp .env.example .env
 ```
 Edit `.env` and paste your `BOT_TOKEN` and `ADMIN_CHAT_ID`.
 
-**3. Start:**
+**4. Start:**
 ```bash
 docker compose up -d
 ```
 
-**4. Access:**
-- **Web App:** `http://localhost`
-- **Admin Panel:** `http://localhost/admin`
-- **API Docs:** `http://localhost:8000/docs`
+**5. Open in browser:**
+- **Feedback form:** http://localhost
+- **Admin panel:** http://localhost/admin
+- **API docs:** http://localhost:8000/docs
+
+**To stop:**
+```bash
+docker compose down
+```
 
 ## Tech Stack
 
