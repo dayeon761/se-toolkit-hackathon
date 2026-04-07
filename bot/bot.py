@@ -88,12 +88,14 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         async with httpx.AsyncClient() as client:
             resp = await client.get(f"{BACKEND_URL}/api/stats")
             data = resp.json()
+        keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
         await query.edit_message_text(
             f"📊 *Статистика:*\n\n"
             f"Всего отзывов: `{data['total']}`\n"
             f"Средний рейтинг: `{data['avg_rating']}`/5\n"
             f"Сегодня: `{data['today']}`",
             parse_mode="Markdown",
+            reply_markup=InlineKeyboardMarkup(keyboard),
         )
 
     elif action == "list":
@@ -102,7 +104,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             feedbacks = resp.json()[:5]
 
         if not feedbacks:
-            await query.edit_message_text("📭 Отзывов пока нет.")
+            keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
+            await query.edit_message_text("📭 Отзывов пока нет.", reply_markup=InlineKeyboardMarkup(keyboard))
             return
 
         text = "📋 *Последние 5 отзывов:*\n\n"
@@ -112,7 +115,8 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text += f"{cat_emoji} *{fb['author']}* | {stars}\n"
             text += f"💬 _{fb['message'][:100]}_\n\n"
 
-        await query.edit_message_text(text, parse_mode="Markdown")
+        keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
+        await query.edit_message_text(text, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif action == "filter_category":
         keyboard = [[InlineKeyboardButton(CATEGORIES[k], callback_data=f"cat_{k}")] for k in CATEGORIES]
@@ -184,10 +188,11 @@ async def button_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
         fb_id = int(action.replace("delete_", ""))
         async with httpx.AsyncClient() as client:
             resp = await client.delete(f"{BACKEND_URL}/api/feedback/{fb_id}")
+        keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
         if resp.status_code == 200:
-            await query.edit_message_text("✅ Отзыв удален.")
+            await query.edit_message_text("✅ Отзыв удален.", reply_markup=InlineKeyboardMarkup(keyboard))
         else:
-            await query.edit_message_text("❌ Ошибка при удалении.")
+            await query.edit_message_text("❌ Ошибка при удалении.", reply_markup=InlineKeyboardMarkup(keyboard))
 
     elif action == "back_menu":
         keyboard = [
@@ -221,7 +226,8 @@ async def _show_rating_filter(update, context, query, ratings, emoji):
     all_feedbacks = all_feedbacks[:5]
 
     if not all_feedbacks:
-        await query.edit_message_text(f"{emoji} Плохих/хороших отзывов пока нет.")
+        keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
+        await query.edit_message_text(f"{emoji} Плохих/хороших отзывов пока нет.", reply_markup=InlineKeyboardMarkup(keyboard))
         return
 
     text = f"{emoji} *Отзывы с оценкой {ratings}*: \n\n"
@@ -231,7 +237,7 @@ async def _show_rating_filter(update, context, query, ratings, emoji):
         text += f"{cat_emoji} *{fb['author']}* | {stars}\n"
         text += f"💬 _{fb['message'][:100]}_\n\n"
 
-    keyboard = [[InlineKeyboardButton("🔙 Назад", callback_data="back_menu")]]
+    keyboard = [[InlineKeyboardButton("🔙 В главное меню", callback_data="back_menu")]]
     await query.edit_message_text(text, parse_mode="Markdown", reply_markup=InlineKeyboardMarkup(keyboard))
 
 
