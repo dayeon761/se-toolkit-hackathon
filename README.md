@@ -4,6 +4,8 @@
 
 ## Demo
 
+**Live product:** Runs locally at `http://localhost` after deployment.
+
 ### Feedback Form
 ![Feedback Form](form-screenshot.png)
 
